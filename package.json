@@ -1,0 +1,21 @@
+{
+  "name": "dino",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "start": "node --experimental-worker ./src/main.js",
+    "dev": "NODE_OPTIONS=--experimental-worker vite",
+    "build": "NODE_OPTIONS=--experimental-worker tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.4",
+    "vite": "^2.8.0"
+  },
+  "dependencies": {
+    "blink-detection": "^1.2.1",
+    "p5": "^1.4.1",
+    "web-worker": "^1.2.0"
+  },
+  "type": "module"
+}
