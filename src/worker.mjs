@@ -1,11 +1,12 @@
 import { blink } from './main.js';
 
-const init = async () => {
-  await blink.loadModel();
-  const videoElement = document.querySelector('video');
-  // Using the default webcam
-  await blink.setUpCamera(videoElement);
-}
+// init is now handeled by main.js
+// const init = async () => {
+//   await blink.loadModel();
+//   const videoElement = document.querySelector('video');
+//   // Using the default webcam
+//   await blink.setUpCamera(videoElement);
+// }
 
 const predict = async () => {
   const blinkPrediction = await blink.getBlinkPrediction();
@@ -19,21 +20,21 @@ const predict = async () => {
   //  rate: number
   // }
   if (blinkPrediction.blink) {
-    // do something when the user blinks
-    // postMessage('BLINK');
-    console.log("blink");
+    postMessage('BLINK'); // tell main.js that player blinked his/her eyes.
   }
   let raf = requestAnimationFrame(predict);
 };
 
 // receive message from master process
 addEventListener('message', async (event) => {
-  // if (event.data !== 'START_PROCESS') return;
-  console.log("initializing process...");
-  await init();
+  if (event.data !== 'START_PROCESS') return;
+
+  // init is now handeled by main.js
+  // await init();
+
   console.log("predict started");
-  await predict();
-  // var intervalID = setInterval(predict, 30000);
+  await predict(); // start looping prediction algorithm
+
   console.log("interval started");
-  // postMessage('PREDICT_STARTED');
+  postMessage('PREDICT_STARTED'); // just saying: nobody is listening on this
 });

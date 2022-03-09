@@ -10,80 +10,69 @@
 ///                Setting                 ///
 ///                                        ///
 //////////////////////////////////////////////
-import p5 from 'p5';
+// import p5 from 'p5';
 import Worker from 'web-worker';
 import blink from 'blink-detection/index.js';
+
+// These are bad because they are meat for backend.
 // import * as child from 'child_process';
 // const { Worker, isMainThread, parentPort, workerData, threadId} = require('worker_threads');
 
-var W;
-var H;
-
-var MARGIN;
-
-var BC_COLOR = (247,235,224);
-var FI_COLOR = (135,116,108);
-
 //////////////////////////////////////////////
 ///                                        ///
-///                 Main                   ///
+///         P5 Functions Useless           ///
 ///                                        ///
 //////////////////////////////////////////////
 
-async function setup() {
-  // W = 800;
-  // H = 400;
-  // MARGIN = min(W, H)/10;
-  // RECT_HEIGHT = H - 2*MARGIN;
-  // RECT_WIDTH = W - 2*MARGIN;
+// async function setup() {
+// }
 
-  // mainCanvas = this;
-  // createCanvas(W, H);
-  // pixelDensity(1);
-  // background(BC_COLOR); // nope
-  // fill(FI_COLOR);
-  // stroke(FI_COLOR);
-  // strokeWeight(3)
-}
+// async function draw() {
+//   let dino = window.__DINO__.tRex;
+//   // dino.setDuck(true);
+//   if (!dino.jumping && !dino.ducking) {
+//       window.__DINO__.playSound(window.__DINO__.soundFx.BUTTON_PRESS);
+//       dino.startJump(window.__DINO__.currentSpeed);
+//   }
+// }
 
-async function draw() {
-  let dino = window.__DINO__.tRex;
-  // dino.setDuck(true);
-  if (!dino.jumping && !dino.ducking) {
-      window.__DINO__.playSound(window.__DINO__.soundFx.BUTTON_PRESS);
-      dino.startJump(window.__DINO__.currentSpeed);
-  }
-}
+// const sketch = (s) => {
+//     s.setup = setup
+//     s.draw = draw
+// }
 
-const sketch = (s) => {
-    s.setup = setup
-    s.draw = draw
-}
-
+//////////////////////////////////////////////
+///                                        ///
+///            Spawn Process               ///
+///                                        ///
+//////////////////////////////////////////////
 (async function () {
-  // fork another process
   const url = new URL('./worker.mjs', import.meta.url);
-  // const worker = new Worker(url, {type: 'module'}); // module is important
-  const worker = new Worker(url); // module is important
-  // send list of e-mails to forked process
-  // listen for messages from forked process
+
+  // spawn worker.mjs as module
+  const worker = new Worker(url, {type: 'module'});
+  
+  // listen message: when player blink eye
   worker.addEventListener('message', event => {
     if (event.data !== 'BLINK') return;
     console.log(event.data, 'BLINK');
   });
 
+  // init camera logic
   const init = async () => {
     await blink.loadModel();
     const videoElement = document.querySelector('video');
     // Using the default webcam
     await blink.setUpCamera(videoElement);
   }
-
   init();
 
-  const sketchInstance = new p5(sketch);
+  // useless p5. Don't bother about it.
+  // const sketchInstance = new p5(sketch);
   
   console.log("send start process");
+
+  // worker.mjs will 
   worker.postMessage('START_PROCESS');
 })();
 
